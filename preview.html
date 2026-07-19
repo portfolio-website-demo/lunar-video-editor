@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lunar | High-Retention Video Editor Portfolio</title>
+<meta name="description" content="Lunar - Premium video editor portfolio. Specializing in high-retention content, pacing, sound design, and custom storytelling."/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M35,55 C33,45 42,28 58,26 C68,25 73,30 70,37 C68,43 56,43 47,46 C40,48 37,51 35,55 Z' fill='%23ccff00'/%3E%3Cpath d='M37,58 C35,64 36,75 44,79 C50,81 56,78 55,71 C54,66 48,65 44,65 C40,65 39,61 37,58 Z' fill='%23ccff00'/%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { 
+        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif']
+      },
+      keyframes: {
+        marquee:         { '0%':{ transform:'translateX(0%)' },        '100%':{ transform:'translateX(-50%)' } },
+        marqueeRev:      { '0%':{ transform:'translateX(-50%)' },      '100%':{ transform:'translateX(0%)' } },
+        floatUp:         { '0%,100%':{ transform:'translateY(0px)' },  '50%':{ transform:'translateY(-10px)' } },
+        fadeSlideUp:     { '0%':{ opacity:0,transform:'translateY(20px)' }, '100%':{ opacity:1,transform:'translateY(0)' } },
+      },
+      animation: {
+        marquee:    'marquee 28s linear infinite',
+        marqueeRev: 'marqueeRev 32s linear infinite',
+        float:      'floatUp 6s ease-in-out infinite',
+        floatSlow:  'floatUp 9s ease-in-out infinite',
+      }
+    }
+  }
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans','Inter','Helvetica Neue',sans-serif;background:#FDFDFD;color:#0A0A0A;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#FDFDFD}::-webkit-scrollbar-thumb{background:#d4d4d4;border-radius:2px}
+
+/* hide scrollbar for carousel */
+.hide-scroll{scrollbar-width:none;-ms-overflow-style:none}
+.hide-scroll::-webkit-scrollbar{display:none}
+
+/* toggle */
+.tog-wrap{position:relative;width:44px;height:24px;display:inline-block}
+.tog-wrap input{opacity:0;width:0;height:0;position:absolute}
+.tog-slider{position:absolute;cursor:pointer;inset:0;background:#d4d4d8;border-radius:34px;transition:.3s}
+.tog-slider:before{content:"";position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+input:checked+.tog-slider{background:#0A0A0A}
+input:checked+.tog-slider:before{transform:translateX(20px)}
+
+/* dot pattern bg */
+.dot-bg{background-image:radial-gradient(circle,#e4e4e7 1px,transparent 1px);background-size:24px 24px}
+
+/* glass */
+.glass{background:rgba(255,255,255,0.75);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.6)}
+
+/* neon section */
+.neon-section{background:#ccff00}
+
+/* masonry */
+.masonry{columns:4;column-gap:10px}
+@media(max-width:768px){.masonry{columns:2}}
+.masonry-item{break-inside:avoid;margin-bottom:10px}
+
+/* art card hover */
+.art-card img{transition:transform .5s ease}
+.art-card:hover img{transform:scale(1.07)}
+
+/* pricing popular ring */
+.popular-ring{outline:2px solid #fb923c;outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- React & Framer Motion CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/framer-motion@10.18.0/dist/framer-motion.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+const { motion, AnimatePresence } = Motion;
+
+/* ── spring configs ─────────────────────────────── */
+const sp  = { type:'spring', stiffness:100, damping:20 };
+const spF = { type:'spring', stiffness:220, damping:26 };
+
+const reveal = (delay=0) => ({
+  initial:{opacity:0,y:40},
+  whileInView:{opacity:1,y:0},
+  transition:{...sp,delay},
+  viewport:{once:true,margin:'-60px'},
+});
+
+const getMailLink = (subject, body) => {
+  const email = 'snthathsara@gmail.com';
+  const encodedSubject = encodeURIComponent(subject);
+  const encodedBody = encodeURIComponent(body);
+  
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+  
+  if (isMobile) {
+    return `mailto:${email}?subject=${encodedSubject}&body=${encodedBody}`;
+  } else {
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodedSubject}&body=${encodedBody}`;
+  }
+};
+
+const getMailTarget = () => {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+  return isMobile ? '_self' : '_blank';
+};
+
+// Direct curated stable high-resolution Unsplash photo IDs that NEVER fail to load
+const images = {
+  abstractBlue: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=350&h=480&q=80',
+  colorfulAbstract: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=350&h=480&q=80',
+  portraitVibrant: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=350&h=480&q=80',
+  render3D: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=350&h=480&q=80',
+  graffiti: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=350&h=480&q=80',
+  
+  gatewayWoman: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1200&h=800&q=80',
+  
+  v1: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=300&h=450&q=80',
+  v2: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=300&h=450&q=80',
+  v3: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&h=450&q=80',
+  v4: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=300&h=450&q=80',
+  v5: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&h=450&q=80',
+
+  g1: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=300&h=300&q=80',
+  g2: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=300&h=300&q=80',
+  g3: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&h=300&q=80',
+  g4: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=300&h=300&q=80',
+  g5: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&h=300&q=80',
+  g6: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=300&h=300&q=80',
+
+  m1: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=350&h=350&q=80',
+  m2: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=350&h=350&q=80',
+  m3: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=350&h=350&q=80',
+  m4: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=350&h=350&q=80',
+  m5: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=350&h=350&q=80',
+  m6: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=350&h=350&q=80',
+
+  featuredArtist: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=400&h=600&q=80',
+  flower3D: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=300&h=300&q=80',
+  pinkBox: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=300&h=400&q=80',
+  editorSetup: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=300&h=400&q=80'
+};
+
+/* ── hero scatter cards ─────────────────────────── */
+const HERO_CARDS = [
+  {img: images.abstractBlue,      rotate:-15, tx:-200, tag:null},
+  {img: images.colorfulAbstract,  rotate:-7,  tx:-100, tag:'@cuts'},
+  {img: images.portraitVibrant,   rotate:0,   tx:0,    tag:null},
+  {img: images.render3D,          rotate:7,   tx:100,  tag:null},
+  {img: images.graffiti,          rotate:15,  tx:200,  tag:'@lunar'},
+];
+
+/* ── trusted logos ──────────────────────────────── */
+const LOGOS = ['Premiere Pro','After Effects','DaVinci Resolve','Final Cut','Avid','CapCut'];
+
+/* ── vertical cards ─────────────────────────── */
+const VCARDS = [
+  {img: images.v1, title:'Retention Boost',    price:'85% Watch Time'},
+  {img: images.v2, title:'Cinematic Grading',  price:'Color Grading'},
+  {img: images.v3, title:'Sound FX Layer',     price:'Sound Design'},
+  {img: images.v4, title:'Fast-Paced Hook',    price:'Intro Edits'},
+  {img: images.v5, title:'Visual Effects',     price:'Motion Graphics'},
+];
+
+/* ── grid thumbs ─────────────────────────────────── */
+const GTHUMBS = [
+  {img: images.g1},{img: images.g2},
+  {img: images.g3},{img: images.g4},
+  {img: images.g5},{img: images.g6},
+];
+
+/* ── marketplace/projects carousel ───────────────── */
+const MKTCARDS = [
+  {img: images.m1, title:'Retention Magic',   artist:'@lunar'},
+  {img: images.m2, title:'Cinematic Vlog',    artist:'@lunar'},
+  {img: images.m3, title:'Visual Hook Edits', artist:'@lunar'},
+  {img: images.m4, title:'Sound FX Layering', artist:'@lunar'},
+  {img: images.m5, title:'Dynamic Zoom Cut',  artist:'@lunar'},
+  {img: images.m6, title:'Slick Transitions', artist:'@lunar'},
+];
+
+/* ── masonry grid ────────────────────────────────── */
+const MASONRY = [
+  {img: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=300&h=400&q=80',h:'h-64'},
+  {img: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=300&h=300&q=80',h:'h-44'},
+  {img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&h=500&q=80',h:'h-80'},
+  {img: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=300&h=350&q=80',h:'h-56'},
+  {img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&h=320&q=80',h:'h-48'},
+  {img: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=300&h=450&q=80',h:'h-72'},
+  {img: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=300&h=310&q=80',h:'h-52'},
+  {img: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=300&h=500&q=80',h:'h-80'},
+];
+
+/* ── avatar cloud positions ──────────────────────── */
+const AVATAR_POS = [
+  {t:'4%',l:'6%'},{t:'10%',l:'22%'},{t:'3%',l:'44%'},{t:'7%',l:'64%'},{t:'4%',l:'82%'},
+  {t:'18%',l:'2%'},{t:'22%',l:'16%'},{t:'17%',l:'36%'},{t:'20%',l:'56%'},{t:'19%',l:'74%'},
+  {t:'14%',l:'90%'},{t:'36%',l:'4%'},{t:'40%',l:'12%'},{t:'38%',l:'84%'},{t:'36%',l:'92%'},
+  {t:'54%',l:'2%'},{t:'57%',l:'16%'},{t:'54%',l:'76%'},{t:'58%',l:'90%'},{t:'70%',l:'6%'},
+  {t:'72%',l:'22%'},{t:'68%',l:'42%'},{t:'71%',l:'60%'},{t:'69%',l:'78%'},{t:'74%',l:'88%'},
+  {t:'82%',l:'14%'},{t:'84%',l:'30%'},{t:'80%',l:'52%'},{t:'83%',l:'68%'},{t:'86%',l:'84%'},
+];
+
+/* ──────────────────────────────────────────────────
+   NAVBAR
+────────────────────────────────────────────────── */
+function Navbar(){
+  const [scrolled,setScrolled]=useState(false);
+  useEffect(()=>{
+    const fn=()=>setScrolled(window.scrollY>20);
+    window.addEventListener('scroll',fn);
+    return ()=>window.removeEventListener('scroll',fn);
+  },[]);
+  return(
+    <motion.header
+      className="fixed top-0 w-full z-50 px-8 py-4 flex justify-between items-center bg-white/90 backdrop-blur-md border-b border-zinc-100"
+      initial={{opacity:0,y:-24}} animate={{opacity:1,y:0}} transition={{duration:.5}}>
+      {/* Logo */}
+      <div className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-black shadow-sm flex-shrink-0">
+          <svg width="22" height="22" fill="none" viewBox="0 0 100 100">
+            <path d="M35,55 C33,45 42,28 58,26 C68,25 73,30 70,37 C68,43 56,43 47,46 C40,48 37,51 35,55 Z" fill="#ccff00" />
+            <path d="M37,58 C35,64 36,75 44,79 C50,81 56,78 55,71 C54,66 48,65 44,65 C40,65 39,61 37,58 Z" fill="#ccff00" />
+          </svg>
+        </div>
+        <span className="font-extrabold text-[#0A0A0A] text-[16px] tracking-tight">Lunar</span>
+      </div>
+
+      {/* Nav */}
+      <nav className="hidden md:flex items-center gap-7">
+        {['About', 'Why Us', 'Recent Works', 'Testimonials', 'Pricing'].map((n)=>(
+          <a key={n} href={`#${n.toLowerCase().replace(/\s+/g, '-')}`} className="text-[13px] font-semibold text-zinc-500 hover:text-[#0A0A0A] transition-colors">
+            {n}
+          </a>
+        ))}
+      </nav>
+
+      {/* Right Contact button instead of icons */}
+      <div>
+        <button className="px-6 py-2.5 bg-[#0A0A0A] text-white rounded-full text-xs font-bold hover:bg-zinc-800 transition-colors shadow">
+          Contact
+        </button>
+      </div>
+    </motion.header>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   HERO
+────────────────────────────────────────────────── */
+function Hero(){
+  const [idx,setIdx]=useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const headlines=[
+    <span>where content meets <span className="text-[#ccff00]" style={{textShadow:'0 0 1px rgba(0,0,0,0.1)'}}>creativity</span></span>,
+    <span>create edit that goes <span className="text-[#ccff00]" style={{textShadow:'0 0 1px rgba(0,0,0,0.1)'}}>viral</span></span>,
+  ];
+
+  useEffect(()=>{
+    const t=setInterval(()=>setIdx(p=>(p+1)%2),4200);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return ()=>{
+      clearInterval(t);
+      window.removeEventListener('resize', handleResize);
+    };
+  },[]);
+
+  return(
+    <section className="min-h-[92vh] flex flex-col items-center justify-center text-center px-4 pt-20 pb-10 relative overflow-hidden dot-bg">
+      <div className="absolute inset-0 dot-bg opacity-50 pointer-events-none"/>
+
+      {/* Animated Headline */}
+      <div className="relative z-10 mb-4 px-2">
+        <AnimatePresence mode="wait">
+          <motion.h1 key={idx}
+            className="text-5xl md:text-7xl lg:text-8xl font-black text-[#0A0A0A] leading-[1.04] max-w-4xl"
+            style={{letterSpacing:'-0.045em'}}
+            initial={{opacity:0,y:22}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-22}}
+            transition={{duration:.45,ease:'easeInOut'}}>
+            {headlines[idx]}
+          </motion.h1>
+        </AnimatePresence>
+      </div>
+
+      {/* Scatter Cards */}
+      <div className="relative w-full max-w-2xl h-[240px] md:h-[310px] flex items-center justify-center z-10">
+        {HERO_CARDS.map((c,i)=>(
+          <motion.div key={i}
+            className="absolute w-28 h-40 md:w-44 md:h-60 rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
+            style={{zIndex: i===2?10 : i<2?i+1:9-i}}
+            initial={{opacity:0,x:0,rotate:0,scale:.65}}
+            animate={{opacity:1,x: isMobile ? c.tx * 0.44 : c.tx, rotate:c.rotate, scale:1}}
+            transition={{type:'spring',stiffness:80,damping:18,delay:.25+i*.09}}
+            whileHover={{scale:1.1,rotate:0,zIndex:20,transition:spF}}>
+            <img src={c.img} alt="" className="w-full h-full object-cover"/>
+            {c.tag&&(
+              <motion.div
+                className="absolute px-3 py-1 rounded-full text-zinc-900 text-[10px] font-bold shadow-lg whitespace-nowrap"
+                style={{
+                  background: '#ccff00',
+                  top:'-26px', left:'50%', transform:'translateX(-50%)'
+                }}
+                initial={{opacity:0,y:8}} animate={{opacity:1,y:0}}
+                transition={{delay:.9+i*.1}}>
+                {c.tag}
+              </motion.div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <motion.div className="relative z-10 flex flex-col items-center gap-4 mt-5"
+        initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{...sp,delay:.85}}>
+        <p className="text-zinc-500 text-sm max-w-sm leading-relaxed">
+          Helping you create high-retention content that drives absolute attention and is ready to go viral.
+        </p>
+        <div className="flex items-center gap-3">
+          <motion.button
+            className="px-6 py-3 bg-[#0A0A0A] text-white rounded-full text-sm font-bold hover:bg-zinc-800 transition-colors shadow-lg"
+            whileHover={{scale:1.04}} whileTap={{scale:.96}}>
+            Start a Project
+          </motion.button>
+          <motion.button
+            className="text-[#0A0A0A] text-sm font-medium hover:text-zinc-500 transition-colors"
+            whileHover={{x:4}}>
+            Contact Us →
+          </motion.button>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   GATEWAY FEATURE
+────────────────────────────────────────────────── */
+function Gateway(){
+  const [tog,setTog]=useState(false);
+  return(
+    <section className="px-6 md:px-10 py-10">
+      <motion.div {...reveal()}
+        className="w-full rounded-[2rem] overflow-hidden relative group cursor-pointer h-[70vh]"
+      >
+        <img src={images.gatewayWoman} alt=""
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/25 via-transparent to-black/45"/>
+        <div className="absolute top-8 left-8 text-white">
+          <p className="text-[11px] font-bold tracking-widest uppercase opacity-80 mb-1">PRODUCED BY LUNAR</p>
+          <h2 className="text-2xl md:text-3xl font-black max-w-[260px] leading-tight" style={{letterSpacing:'-0.03em'}}>
+            Gateway to interactive editing.
+          </h2>
+        </div>
+        <div className="absolute bottom-7 right-7 flex items-center gap-2.5">
+          <div className="flex items-center gap-2 rounded-full px-3.5 py-2 border border-white/30" style={{background:'rgba(255,255,255,0.2)',backdropFilter:'blur(10px)'}}>
+            <span className="text-white text-xs font-medium">Render live</span>
+            <label className="tog-wrap">
+              <input type="checkbox" checked={tog} onChange={()=>setTog(!tog)}/>
+              <span className="tog-slider"/>
+            </label>
+          </div>
+          {['←','→'].map((arrow,i)=>(
+            <button key={i}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold hover:bg-white/30 transition-colors border border-white/30 text-sm"
+              style={{background:'rgba(255,255,255,0.18)',backdropFilter:'blur(10px)'}}>
+              {arrow}
+            </button>
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   TRUSTED MARQUEE
+────────────────────────────────────────────────── */
+function TrustedMarquee(){
+  const all=[...LOGOS,...LOGOS,...LOGOS];
+  return(
+    <section className="py-14 border-y border-zinc-100">
+      <motion.div {...reveal()} className="px-6 md:px-10 mb-7">
+        <h3 className="text-lg font-black text-[#0A0A0A]" style={{letterSpacing:'-0.02em'}}>Trusted by top creators.</h3>
+      </motion.div>
+      <div className="w-full overflow-hidden">
+        <div className="flex gap-14 animate-marquee" style={{width:'max-content'}}>
+          {all.map((logo,i)=>(
+            <div key={i} className="flex items-center gap-2 flex-shrink-0 opacity-40 hover:opacity-80 transition-opacity grayscale hover:grayscale-0">
+              <div className="w-5 h-5 rounded bg-zinc-400 flex-shrink-0"/>
+              <span className="text-xl font-black capitalize tracking-tight text-zinc-500">{logo}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   TYPOGRAPHY + VERTICAL CARDS
+────────────────────────────────────────────────── */
+function TypoCards(){
+  return(
+    <section className="py-24 px-6 md:px-10">
+      <motion.div {...reveal()} className="max-w-5xl mx-auto text-center mb-16">
+        <h2 className="text-4xl md:text-5xl font-black leading-snug text-[#0A0A0A]" style={{letterSpacing:'-0.03em'}}>
+          Whether you're an artist looking to edit your cuts / or creator seeking{' '}
+          <span className="inline-flex items-center px-4 py-1 rounded-full bg-[#ccff00] text-zinc-900 text-3xl md:text-4xl font-black mx-1 align-middle"
+            style={{letterSpacing:'-0.02em'}}>retention hooks</span>{' '}
+          connects you to world of edits & commerce.
+        </h2>
+      </motion.div>
+
+      {/* Overlapping vertical cards */}
+      <div className="flex items-end justify-center overflow-visible">
+        {VCARDS.map((c,i)=>(
+          <motion.div key={i}
+            className="relative flex-shrink-0 w-44 rounded-2xl overflow-hidden shadow-xl cursor-pointer art-card"
+            style={{marginLeft:i===0?0:'-22px', zIndex:i, height:`${310+(i===2?48:i%2===0?20:0)}px`}}
+            initial={{opacity:0,y:60}} whileInView={{opacity:1,y:0}}
+            transition={{...sp,delay:i*.1}} viewport={{once:true,margin:'-60px'}}
+            whileHover={{y:-14,scale:1.05,zIndex:20,transition:spF}}>
+            <img src={c.img} alt={c.title} className="w-full h-full object-cover"/>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"/>
+            <div className="absolute bottom-3 left-3 right-3">
+              <p className="text-white font-bold text-sm">{c.title}</p>
+              <p className="text-white/75 text-xs">{c.price}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   AVATAR CLOUD
+────────────────────────────────────────────────── */
+function AvatarCloud(){
+  return(
+    <section className="relative py-32 overflow-hidden flex items-center justify-center" style={{minHeight:'62vh'}}>
+      {AVATAR_POS.map((p,i)=>(
+        <motion.div key={i}
+          className="absolute w-14 h-14 rounded-xl overflow-hidden border-2 border-white shadow-md cursor-pointer"
+          style={{top:p.t,left:p.l}}
+          initial={{opacity:0,scale:0}} whileInView={{opacity:1,scale:1}}
+          transition={{...sp,delay:i*.04}} viewport={{once:true,margin:'-20px'}}
+          whileHover={{scale:1.25,zIndex:10,transition:spF}}>
+          <img src={`https://i.pravatar.cc/80?img=${(i % 70) + 1}`} alt="" className="w-full h-full object-cover"/>
+        </motion.div>
+      ))}
+      <motion.div className="relative z-10 text-center px-6"
+        initial={{opacity:0,scale:.85}} whileInView={{opacity:1,scale:1}}
+        transition={{...sp,delay:.3}} viewport={{once:true}}>
+        <div className="glass rounded-3xl px-10 py-9 shadow-2xl">
+          <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2">Network</p>
+          <h2 className="text-4xl md:text-5xl font-black text-[#0A0A0A]" style={{letterSpacing:'-0.045em'}}>
+            Find your edit style<br/>with Lunar
+          </h2>
+          <p className="text-zinc-500 text-sm mt-3 font-medium">trusted by 100+ creators</p>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   BENTO STORYTELLING
+────────────────────────────────────────────────── */
+function Bento(){
+  return(
+    <section className="py-24 px-6 md:px-10">
+      <motion.div {...reveal()} className="mb-12">
+        <p className="text-xs font-bold tracking-widest uppercase text-zinc-400 mb-2">My Editing Process</p>
+        <h2 className="text-4xl md:text-5xl font-black text-[#0A0A0A]" style={{letterSpacing:'-0.04em'}}>
+          How I Edit Your Videos
+        </h2>
+      </motion.div>
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 max-w-7xl mx-auto">
+        {/* Card 1 */}
+        <motion.div {...reveal(.05)} whileHover={{y:-5,transition:spF}}
+          className="md:col-span-5 bg-white rounded-3xl border border-zinc-100 p-8 shadow-sm relative overflow-hidden" style={{minHeight:'280px'}}>
+          <h3 className="text-2xl font-black text-[#0A0A0A] mb-2" style={{letterSpacing:'-0.03em'}}>1. Footage Audit & Pacing</h3>
+          <p className="text-zinc-400 text-sm mb-6">I review your raw footage, cut out the fluff, and build a fast-paced baseline narrative structure designed to hook viewers.</p>
+          <div className="relative h-28">
+            {[0,1,2].map(i=>(
+              <div key={i} className="absolute w-28 h-20 rounded-xl overflow-hidden border-2 border-white shadow-lg"
+                style={{left:`${i*28}px`,top:`${i*8}px`,zIndex:i,transform:`rotate(${(i-1)*5}deg)`}}>
+                <img src={images.c1} alt="" className="w-full h-full object-cover"/>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Card 2 */}
+        <motion.div {...reveal(.1)} whileHover={{y:-5,transition:spF}}
+          className="md:col-span-7 rounded-3xl overflow-hidden relative"
+          style={{background:'linear-gradient(135deg,#15803d,#22c55e,#4ade80)',minHeight:'280px'}}>
+          <div className="p-8 h-full flex flex-col justify-between relative z-10">
+            <div>
+              <h3 className="text-2xl font-black text-white mb-2" style={{letterSpacing:'-0.03em'}}>2. Visual Hooks & FX</h3>
+              <p className="text-blue-100 text-sm max-w-xs leading-relaxed">Adding custom keyframe zooms, motion typography, visual hooks, and graphic overlays in the first 5 seconds to guarantee retention.</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:'rgba(255,255,255,0.2)'}}>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>
+              </div>
+              <span className="text-white/80 text-sm font-semibold">Explore Hook Styles</span>
+            </div>
+          </div>
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 w-28 h-28 rounded-full blur-2xl" style={{background:'rgba(255,255,255,0.1)'}}/>
+          <div className="absolute right-10 top-8 w-14 h-14 rounded-xl rotate-12" style={{background:'rgba(255,255,255,0.18)',backdropFilter:'blur(4px)'}}/>
+          <img src={images.editorSetup} alt=""
+            className="absolute right-4 bottom-4 w-28 h-28 rounded-2xl object-cover opacity-70"/>
+        </motion.div>
+
+        {/* Card 3 */}
+        <motion.div {...reveal(.15)} whileHover={{y:-5,transition:spF}}
+          className="md:col-span-4 rounded-3xl overflow-hidden relative"
+          style={{background:'linear-gradient(135deg,#FDA4AF,#F9A8D4)',minHeight:'260px'}}>
+          <div className="p-8 relative z-10 h-full flex flex-col justify-between">
+            <div>
+              <h3 className="text-2xl font-black text-[#0A0A0A] leading-tight mb-2" style={{letterSpacing:'-0.03em'}}>
+                3. Immersive Audio
+              </h3>
+              <p className="text-rose-700 text-sm font-medium">Layering background tracks, custom sound FX, voice dynamics, and audio leveling to maximize engagement.</p>
+            </div>
+          </div>
+          <img src={images.pinkBox} alt=""
+            className="absolute bottom-0 right-0 w-28 h-44 object-cover rounded-tl-3xl opacity-90"/>
+        </motion.div>
+
+        {/* Card 4 */}
+        <motion.div {...reveal(.2)} whileHover={{y:-5,transition:spF}}
+          className="md:col-span-4 bg-[#0A0A0A] rounded-3xl p-8 flex flex-col justify-between" style={{minHeight:'260px'}}>
+          <div>
+            <p className="text-zinc-500 text-xs uppercase tracking-widest mb-3">Revision</p>
+            <h3 className="text-2xl font-black text-white mb-4" style={{letterSpacing:'-0.03em'}}>4. Feedback & Refinement</h3>
+            <p className="text-zinc-400 text-sm leading-relaxed">We sync on notes and revisions to fine-tune pacing, graphics, and structure to your absolute satisfaction.</p>
+          </div>
+          <div className="flex -space-x-2">
+            {[0,1,2].map(i=>(
+              <div key={i} className="w-9 h-9 rounded-full border-2 border-[#0A0A0A] overflow-hidden">
+                <img src={`https://i.pravatar.cc/50?img=${i + 30}`} alt="" className="w-full h-full object-cover"/>
+              </div>
+            ))}
+            <div className="w-9 h-9 rounded-full border-2 border-[#0A0A0A] bg-zinc-700 flex items-center justify-center">
+              <span className="text-white text-[9px] font-black">+90</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Card 5 */}
+        <motion.div {...reveal(.25)} whileHover={{y:-5,transition:spF}}
+          className="md:col-span-4 bg-zinc-50 rounded-3xl border border-zinc-100 p-8 flex flex-col justify-between" style={{minHeight:'260px'}}>
+          <div>
+            <p className="text-zinc-400 text-xs uppercase tracking-widest mb-3">Final Phase</p>
+            <h3 className="text-3xl font-black text-[#0A0A0A]" style={{letterSpacing:'-0.05em'}}>5. Render & Deliver</h3>
+            <p className="text-zinc-500 text-sm mt-2">Exporting in maximum native resolution formats optimized ready to upload and go viral.</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex gap-0.5">
+              {[1,2,3,4,5].map(s=>(
+                <svg key={s} width="13" height="13" viewBox="0 0 24 24" fill="#facc15"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              ))}
+            </div>
+            <span className="text-xs text-zinc-400">Viral ready files</span>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   PORTFOLIO
+────────────────────────────────────────────────── */
+function Marketplace(){
+  const ref=useRef(null);
+  const scroll=(d)=>ref.current?.scrollBy({left:d,behavior:'smooth'});
+  return(
+    <section className="py-24">
+      <div className="px-6 md:px-10 mb-10">
+        <div className="flex items-end justify-between mb-8">
+          <motion.div {...reveal()}>
+            <p className="text-xs font-bold tracking-widest uppercase text-zinc-400 mb-2">Work</p>
+            <h2 className="text-4xl md:text-5xl font-black text-[#0A0A0A]" style={{letterSpacing:'-0.04em'}}>
+              High-Retention Showcase
+            </h2>
+          </motion.div>
+          <div className="flex gap-2">
+            {['←','→'].map((a,i)=>(
+              <button key={i} onClick={()=>scroll(i===0?-340:340)}
+                className="w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center hover:bg-zinc-50 transition-colors font-bold text-sm">
+                {a}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div ref={ref} className="flex gap-5 overflow-x-auto pb-4 hide-scroll">
+          {MKTCARDS.map((c,i)=>(
+            <motion.div key={i} className="flex-shrink-0 w-60 cursor-pointer group"
+              initial={{opacity:0,y:28}} whileInView={{opacity:1,y:0}}
+              transition={{...sp,delay:i*.07}} viewport={{once:true}}
+              whileHover={{y:-6,transition:spF}}>
+              <div className="w-60 h-60 rounded-2xl overflow-hidden mb-3 art-card">
+                <img src={c.img} alt={c.title} className="w-full h-full object-cover"/>
+              </div>
+              <p className="font-bold text-[#0A0A0A] text-sm">{c.title}</p>
+              <p className="text-zinc-400 text-xs">{c.artist}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   SHOWCASE HERO
+────────────────────────────────────────────────── */
+function ShowcaseHero(){
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const SCARDS=[
+    {img: images.v1, rotate:-14, tx:-170, ty:50},
+    {img: images.v2, rotate:-5,  tx:-70,  ty:25},
+    {img: images.v3, rotate:4,   tx:60,   ty:10},
+    {img: images.v4, rotate:13,  tx:170,  ty:35},
+    {img: images.v5, rotate:22,  tx:270,  ty:65},
+  ];
+  return(
+    <section className="py-24 px-6 md:px-10 overflow-hidden">
+      <motion.div className="mb-6"
+        initial={{opacity:0,y:22}} whileInView={{opacity:1,y:0}} transition={sp} viewport={{once:true}}>
+        <p className="text-xs font-bold tracking-widest uppercase text-zinc-400 mb-4">Lunar</p>
+        <h2 className="text-5xl md:text-7xl font-black leading-none" style={{letterSpacing:'-0.05em'}}>
+          <span className="text-[#0A0A0A]">Showcase, Edit,</span><br/>
+          <span className="text-[#ccff00]" style={{textShadow:'0 0 1px rgba(0,0,0,0.1)'}}>& acquire views </span>
+          <span className="text-[#0A0A0A]">to</span><br/>
+          <span className="text-[#0A0A0A]">your </span>
+          <span className="text-zinc-300">videos</span>
+        </h2>
+      </motion.div>
+
+      <div className="flex flex-col md:flex-row gap-10 items-start mt-8">
+        <motion.div className="flex-shrink-0 max-w-xs"
+          initial={{opacity:0,x:-20}} whileInView={{opacity:1,x:0}}
+          transition={{...sp,delay:.2}} viewport={{once:true}}>
+          <p className="text-zinc-500 text-sm leading-relaxed mb-4">
+            A high-energy workflow designed by Lunar to transform ordinary footage into viral retention gems.
+          </p>
+          <p className="text-zinc-400 text-xs mb-6">View pricing details →</p>
+          <motion.button
+            className="px-6 py-3 bg-zinc-100 text-[#0A0A0A] rounded-full text-sm font-bold hover:bg-zinc-200 transition-colors"
+            whileHover={{scale:1.04}} whileTap={{scale:.97}}>
+            Book now
+          </motion.button>
+        </motion.div>
+
+        <div className="flex-1 relative h-[250px] md:h-[380px] flex items-center justify-center mt-6 md:mt-0">
+          {SCARDS.map((c,i)=>(
+            <motion.div key={i}
+              className="absolute w-28 h-36 md:w-40 md:h-52 rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
+              style={{zIndex:i}}
+              initial={{opacity:0,x:0,y:0,rotate:0,scale:.6}}
+              whileInView={{opacity:1,x: isMobile ? c.tx * 0.44 : c.tx, y: isMobile ? (c.ty-110)*0.5 : c.ty-110, rotate:c.rotate, scale:1}}
+              transition={{type:'spring',stiffness:80,damping:18,delay:.1+i*.09}}
+              viewport={{once:true}}
+              whileHover={{scale:1.12,rotate:0,zIndex:20,transition:spF}}>
+              <img src={c.img} alt="" className="w-full h-full object-cover"/>
+              {i===1&&(
+                <motion.div className="absolute px-3 py-1 rounded-full text-zinc-900 text-[10px] font-bold shadow"
+                  style={{background:'#ccff00',top:'-22px',left:'50%',transform:'translateX(-50%)'}}>
+                  @viral
+                </motion.div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   TESTIMONIALS
+────────────────────────────────────────────────── */
+function Testimonials(){
+  const reviews=[
+    {name:'Sarah Jenkins', handle:'@sarahvlogs', img:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80', text:'Lunar completely transformed my channel. The first 5 seconds pacing is absolute magic—my hook retention shot up by 45%!'},
+    {name:'Alex Rivera', handle:'@techunboxed', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80', text:'The color grading and sound design details are unmatched. Lunar\'s edits are clean, energetic, and always ready to blow up on the feed.'},
+    {name:'Marcus Chen', handle:'@marcusclips', img:'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80', text:'Working with Lunar is like having a viral cheat code. Pacing is punchy, subtitles are incredibly smooth, and delivery is always on point.'},
+    {name:'Elena Rostova', handle:'@elenalifestyle', img:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&h=120&q=80', text:'Lunar turned my raw footage into a viral retention masterpiece. The custom transition styles are extremely slick.'},
+  ];
+  const doubled = [...reviews, ...reviews, ...reviews];
+  return(
+    <section className="py-24 px-6 md:px-10 overflow-hidden" id="testimonials">
+      <motion.div {...reveal()} className="text-center mb-16">
+        <p className="text-xs font-bold tracking-widest uppercase text-zinc-400 mb-3">Feedback</p>
+        <h2 className="text-4xl md:text-5xl font-black text-[#0A0A0A]" style={{letterSpacing:'-0.04em'}}>Testimonials</h2>
+        <p className="text-zinc-500 text-base mt-3">What top creators say about working with Lunar.</p>
+      </motion.div>
+      <div className="w-full overflow-hidden py-4">
+        <div className="flex gap-6 animate-marquee hover:[animation-play-state:paused]" style={{width:'max-content'}}>
+          {doubled.map((t,i)=>(
+            <div key={i} className="w-[360px] p-6 rounded-2xl bg-white border border-zinc-150 shadow-sm flex flex-col justify-between flex-shrink-0 cursor-default select-none hover:border-blue-300 transition-all duration-300" style={{minHeight:'200px'}}>
+              <p className="text-zinc-600 text-sm leading-relaxed mb-6 italic">"{t.text}"</p>
+              <div className="flex items-center gap-3 pt-4 border-t border-zinc-100">
+                <img src={t.img} alt={t.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-zinc-200"/>
+                <div>
+                  <p className="text-[#0A0A0A] text-sm font-bold">{t.name}</p>
+                  <p className="text-zinc-400 text-xs">{t.handle}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   PRICING
+────────────────────────────────────────────────── */
+function Pricing(){
+  const plans=[
+    {name:'Growth Pack', subtitle:'15 videos · 1 vid per 2 days', price:'$170', oldPrice:'$200', popular:false,
+     features:['Smooth captions','High retention editing','Viral animations','Proven to go viral','Colorgrading, Masking, Motion graphics and more']},
+    {name:'Creator Pack', subtitle:'30 videos · 1 vid per day', price:'$300', oldPrice:'$330', popular:true,
+     features:['Smooth captions','High retention editing','Viral animations','Proven to go viral','Colorgrading, Masking, Motion graphics and more','+1 Free Video']},
+    {name:'Monster Pack', subtitle:'40-60 videos · On time delivery', price:'$400-650', oldPrice:'$500-700', popular:false,
+     features:['Smooth captions','High retention editing','Viral animations','Proven to go viral','Colorgrading, Masking, Motion graphics and more','+2 Free Videos']},
+  ];
+  return(
+    <section className="py-24 px-6 md:px-10" id="pricing">
+      <motion.div {...reveal()} className="text-center mb-16">
+        <p className="text-xs font-bold tracking-widest uppercase text-zinc-400 mb-3">Bundles for Creators</p>
+        <h2 className="text-4xl md:text-5xl font-black text-[#0A0A0A]" style={{letterSpacing:'-0.04em'}}>Pricing</h2>
+        <p className="text-zinc-500 text-base mt-3">Everything above included in every bundle.</p>
+      </motion.div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        {plans.map((p,i)=>(
+          <motion.div key={p.name}
+            className={`rounded-3xl p-8 flex flex-col relative bg-white border ${
+              p.popular?'border-2 border-orange-400 shadow-lg shadow-orange-400/10':'border-zinc-200 shadow-sm'
+            }`}
+            initial={{opacity:0,y:40}} whileInView={{opacity:1,y:0}}
+            transition={{...sp,delay:i*.1}} viewport={{once:true,margin:'-50px'}}
+            whileHover={{y:-7,transition:spF}}>
+            {p.popular&&(
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-orange-400 text-white text-xs font-black rounded-full">
+                Most Popular
+              </div>
+            )}
+            <div className="mb-6">
+              <p className="text-lg font-bold text-[#0A0A0A] mb-0.5">{p.name}</p>
+              <p className="text-xs text-zinc-400 mb-3">{p.subtitle}</p>
+              <div className="flex items-end gap-2">
+                <span className="text-4xl font-black tracking-tighter text-[#0A0A0A]">{p.price}</span>
+                {p.oldPrice && (
+                  <span className="text-sm mb-1 text-zinc-400 line-through">{p.oldPrice}</span>
+                )}
+              </div>
+            </div>
+            <ul className="flex flex-col gap-3 flex-1 mb-8">
+              {p.features.map((f,fi)=>(
+                <li key={fi} className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 bg-orange-50">
+                    <svg width="8" height="8" fill="none" viewBox="0 0 8 8">
+                      <path d="M1.5 4L3 5.5L6.5 2.5" stroke="#f97316" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                  </div>
+                  <span className={`text-sm ${f.startsWith('+') ? 'text-orange-500 font-bold' : 'text-zinc-600'}`}>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <motion.a
+              href={getMailLink(`Order: ${p.name} - Lunar`, `Hello Lunar,\n\nI would like to order the ${p.name}.\n- My Name: \n- Extra Information: \n\nThanks!`)}
+              target={getMailTarget()}
+              rel="noopener noreferrer"
+              className={`w-full py-3 rounded-2xl text-sm font-black text-center block transition-all ${
+                p.popular
+                  ? 'bg-gradient-to-r from-orange-400 to-amber-500 text-white shadow-md shadow-orange-400/20 hover:from-orange-500 hover:to-amber-600'
+                  : 'bg-transparent border border-zinc-300 text-zinc-700 hover:bg-zinc-50'
+              }`}
+              whileHover={{scale:1.02}} whileTap={{scale:.98}}>
+              Get Started
+            </motion.a>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   NEON LIME MARQUEE
+────────────────────────────────────────────────── */
+function NeonMarquee(){
+  const texts=['Inspired by pacing 🌸','New Video Format ✦','Cut & Deliver 🎨','Discover High retention 💎'];
+  const all=[...texts,...texts,...texts];
+  return(
+    <section className="relative overflow-hidden py-14 neon-section">
+      {/* Floating line-art icons */}
+      {[
+        {top:'15%',left:'6%',size:40,d:'M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z'},
+        {top:'20%',right:'10%',size:34,d:'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'},
+        {bottom:'15%',left:'30%',size:38,d:'M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z'},
+      ].map((ic,i)=>(
+        <div key={i} className={`absolute opacity-20 ${i%2===0?'animate-float':'animate-floatSlow'}`}
+          style={{top:ic.top,left:ic.left,right:ic.right,bottom:ic.bottom}}>
+          <svg width={ic.size} height={ic.size} fill="none" viewBox="0 0 24 24">
+            <path d={ic.d} stroke="#0A0A0A" strokeWidth="1.4"/>
+          </svg>
+        </div>
+      ))}
+
+      {/* Row 1 */}
+      <div className="w-full overflow-hidden mb-2">
+        <div className="flex whitespace-nowrap animate-marquee" style={{width:'max-content'}}>
+          {all.map((t,i)=>(
+            <span key={i} className="text-4xl md:text-6xl font-black inline-block px-8 text-[#0A0A0A]"
+              style={{letterSpacing:'-0.045em'}}>{t}</span>
+          ))}
+        </div>
+      </div>
+      {/* Row 2 reverse */}
+      <div className="w-full overflow-hidden">
+        <div className="flex whitespace-nowrap animate-marqueeRev" style={{width:'max-content'}}>
+          {all.map((t,i)=>(
+            <span key={i} className="text-3xl md:text-4xl font-black inline-block px-8 text-[#0A0A0A]/40"
+              style={{letterSpacing:'-0.04em'}}>{t}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   FOOTER FEATURE CARDS
+────────────────────────────────────────────────── */
+function FooterFeatures(){
+  return(
+    <section className="px-6 md:px-10 py-24 flex items-center justify-center bg-zinc-50/20" id="contact">
+      <div className="relative w-full max-w-md">
+        {/* Green offset card background */}
+        <div className="absolute inset-0 bg-[#ccff00] rounded-[2rem] translate-y-4 shadow-lg border border-[#ccff00]"/>
+        
+        {/* Main dark card */}
+        <div className="relative bg-[#121214] text-white rounded-[2rem] p-6 shadow-xl border border-zinc-800">
+          {/* Top row */}
+          <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold mb-6">
+            <span>Video Editor</span>
+            <span>7:15 PM</span>
+          </div>
+
+          {/* User info */}
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-14 h-14 rounded-full bg-black border border-zinc-850 flex items-center justify-center flex-shrink-0">
+              <svg width="24" height="24" fill="none" viewBox="0 0 100 100">
+                <path d="M35,55 C33,45 42,28 58,26 C68,25 73,30 70,37 C68,43 56,43 47,46 C40,48 37,51 35,55 Z" fill="#ccff00" />
+                <path d="M37,58 C35,64 36,75 44,79 C50,81 56,78 55,71 C54,66 48,65 44,65 C40,65 39,61 37,58 Z" fill="#ccff00" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="text-lg font-black text-white">Lunar</h4>
+              <p className="text-xs text-[#ccff00] font-semibold flex items-center gap-1.5 mt-0.5">
+                <span className="w-2 h-2 rounded-full bg-[#ccff00] inline-block animate-pulse"/>
+                Available for work
+              </p>
+            </div>
+          </div>
+
+          {/* Buttons row */}
+          <div className="grid grid-cols-2 gap-4">
+            <a href={getMailLink('Project Inquiry for Lunar', 'Hello Lunar,\n\nPlease fill out the following details to get started:\n- Your Name: \n- Purpose of Reaching Out: \n- About the Project: \n- Estimated Budget: \n- Timeline: \n\nThanks!')}
+               target={getMailTarget()}
+               rel="noopener noreferrer"
+               className="flex items-center justify-center gap-1.5 py-3.5 bg-zinc-800/85 hover:bg-zinc-700 hover:text-white transition-all rounded-xl text-xs font-black text-zinc-200 border border-zinc-700/60 shadow-sm">
+              <span>+</span> Contact Us
+            </a>
+            <a href="#pricing" 
+               className="flex items-center justify-center gap-1.5 py-3.5 bg-zinc-800/85 hover:bg-zinc-700 hover:text-white transition-all rounded-xl text-xs font-black text-zinc-200 border border-zinc-700/60 shadow-sm">
+              <span>📋</span> Check Pricing
+            </a>
+          </div>
+        </div>
+
+        {/* Exposed bottom tag */}
+        <div className="absolute bottom-0 left-0 right-0 h-10 flex items-center justify-center text-zinc-900 font-extrabold text-xs pointer-events-none z-10 translate-y-4">
+          <span className="mr-1">⚡</span> Currently High on Creativity
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   FOOTER
+────────────────────────────────────────────────── */
+function Footer(){
+  const cols=[
+    {title:'Studio',links:['Projects','Retention Graph','Tools','Pricing','Workflow']},
+    {title:'Company', links:['About','Blog','Press','Careers','Contact']},
+    {title:'Support', links:['Help Center','Privacy Policy','Terms of Service','Guidelines']},
+  ];
+  const socials=[
+    {label:'Twitter', d:'M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z'},
+    {label:'Instagram',d:'M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4c0 3.2-2.6 5.8-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8C2 4.6 4.6 2 7.8 2z'},
+    {label:'YouTube',  d:'M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z'},
+  ];
+  return(
+    <footer className="py-12 border-t border-zinc-100 px-6 md:px-10">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12">
+        <div className="flex flex-col gap-4 max-w-xs">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-black shadow-sm flex-shrink-0">
+              <svg width="22" height="22" fill="none" viewBox="0 0 100 100">
+                <path d="M35,55 C33,45 42,28 58,26 C68,25 73,30 70,37 C68,43 56,43 47,46 C40,48 37,51 35,55 Z" fill="#ccff00" />
+                <path d="M37,58 C35,64 36,75 44,79 C50,81 56,78 55,71 C54,66 48,65 44,65 C40,65 39,61 37,58 Z" fill="#ccff00" />
+              </svg>
+            </div>
+            <span className="font-extrabold text-[#0A0A0A] text-[16px] tracking-tight">Lunar</span>
+          </div>
+          <p className="text-sm text-zinc-500 leading-relaxed">
+            Your views, edited. The premier destination for creators to optimize retention and audio-visual design.
+          </p>
+          <div className="flex items-center gap-2.5 mt-1">
+            {socials.map(({label,d})=>(
+              <a key={label} href="#"
+                className="w-8 h-8 rounded-full border border-zinc-200 flex items-center justify-center hover:border-zinc-400 transition-colors">
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24">
+                  <path d={d} stroke="#71717a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-10">
+          {cols.map(c=>(
+            <div key={c.title}>
+              <p className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4">{c.title}</p>
+              <ul className="flex flex-col gap-2.5">
+                {c.links.map(l=>(
+                  <li key={l}>
+                    <a href="#" className="text-sm text-zinc-500 hover:text-[#0A0A0A] transition-colors">{l}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-zinc-100 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <p className="text-xs text-zinc-400">© 2024 Lunar. All rights reserved.</p>
+        <p className="text-xs text-zinc-400">Made with ❤️ for creators everywhere.</p>
+      </div>
+    </footer>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   PRELOADER
+────────────────────────────────────────────────── */
+function Preloader({ loading }){
+  return(
+    <AnimatePresence>
+      {loading && (
+        <motion.div
+          className="fixed inset-0 z-[9999] bg-[#ccff00] flex flex-col items-center justify-center select-none"
+          initial={{ x: 0 }}
+          exit={{ x: '-100%' }}
+          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+        >
+          <div className="text-center">
+            <motion.h1 
+              className="text-6xl md:text-8xl font-black text-[#0A0A0A] tracking-tighter uppercase"
+              animate={{ opacity: [0.35, 1, 0.35] }}
+              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+            >
+              Loading
+            </motion.h1>
+            <div className="w-32 h-[3px] bg-black/10 rounded-full mx-auto mt-6 overflow-hidden">
+              <motion.div 
+                className="h-full bg-black rounded-full"
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 2.2, ease: "easeInOut" }}
+              />
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   APP
+────────────────────────────────────────────────── */
+function App(){
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleLoad = () => {
+      // Small timeout to allow heavy rendering to settle under the hood
+      setTimeout(() => setLoading(false), 2400);
+    };
+
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+      return () => window.removeEventListener('load', handleLoad);
+    }
+  }, []);
+
+  return(
+    <div className="min-h-screen bg-[#FDFDFD]">
+      <Preloader loading={loading}/>
+      <Navbar/>
+      <main>
+        <Hero/>
+        <Gateway/>
+        <TrustedMarquee/>
+        <TypoCards/>
+        <AvatarCloud/>
+        <Bento/>
+        <Marketplace/>
+        <ShowcaseHero/>
+        <Testimonials/>
+        <Pricing/>
+        <NeonMarquee/>
+        <FooterFeatures/>
+      </main>
+      <Footer/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
